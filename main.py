@@ -1,50 +1,46 @@
 import cv2
 import numpy as np
-from aruco_detection.detector import detectArucoTag
-from utils.visualize import drawEpipolarLines
-from utils.pose_estimation import giveFundamentalMatrix, calculateEssentialMatrix, decomposeEssentialMatrix
-from utils.calibrate import calibrateCamera
+from detector import process_image_for_aruco
+from pose_estimation import calculate_fundamental_matrix, calculate_essential_matrix, estimateCameraPose
+from epipolar import draw_epipolar_lines
+from calibration import getCalibrationMatrix
+import os
+import glob
+
+
+# Import stereo images
+left = cv2.imread('content/left.jpg')
+right = cv2.imread('content/right.jpg')
+assert left is not None, "Image not loaded properly, check the path."
+assert right is not None, "Image not loaded properly, check the path."
+
+# Import calibration images 
+images = glob.glob('calib_images/*.jpg')
 
 
 if __name__ == "__main__":
-    # Load a set of images or video
-    image_files = [...]  # Replace with paths to your image files
-    images = [cv2.imread(file) for file in image_files]
+    markerSize = 6
+    totalMarkers = 250
+    K = getCalibrationMatrix(images)
+    
+    # Ensure that 'left.jpg' and 'right.jpg' are the paths to your images
+    pts1, ids1 = process_image_for_aruco(left, markerSize, totalMarkers)
+    pts2, ids2 = process_image_for_aruco(right, markerSize, totalMarkers)
 
-    # Parameters for calibration (example)
-    chessboard_size = (9, 6)  # Chessboard dimensions (inner corners per chessboard row and column)
-    frame_size = (images[0].shape[1], images[0].shape[0])
+    if pts1 is not None and pts2 is not None and K is not None:
+        F = calculate_fundamental_matrix(pts1, pts2)
+        E = calculate_essential_matrix(F, K)
+        R, t = estimateCameraPose(E, K, pts1, pts2)
+        print("Estimated Camera Pose:")
+        print("Rotation Matrix:\n", R)
+        print("Translation Vector:\n", t)
 
-    # Calibrate camera
-    ret, mtx, dist, rvecs, tvecs = calibrateCamera(images, chessboard_size, frame_size)
+        left_img = cv2.imread('left.jpg')
+        right_img = cv2.imread('right.jpg')
+        img1_with_lines = draw_epipolar_lines(left, right, F, pts1, pts2)
+        # You may want to save or display the image using cv2.imshow and cv2.imwrite
 
-    # Detect Aruco Tags (assuming you have a function to detect and return points)
-    aruco_ids, aruco_corners = detectArucoTag(images[0])  # Just as an example using the first image
+    else:
+        print("Aruco markers not detected in both images or missing camera intrinsic matrix")
 
-    # Let's assume we have two sets of points from two images (from a stereo pair for instance)
-    # pts1 and pts2 should be matched points from image 1 and image 2 respectively
-    pts1 = np.array([...])  # Replace with actual points
-    pts2 = np.array([...])  # Replace with actual points
-
-    # Compute the fundamental matrix
-    F = giveFundamentalMatrix(pts1, pts2)
-
-    # Draw the epipolar lines (if you have a specific function for this)
-    # The following function calls depend on the implementation of drawEpipolarLines
-    img1_epilines = drawEpipolarLines(images[0], F, pts2)
-    img2_epilines = drawEpipolarLines(images[1], F, pts1)
-
-    # Assuming we have an essential matrix function
-    E = calculateEssentialMatrix(F, mtx)
-
-    # Decompose the essential matrix to get possible camera poses
-    R1, R2, t1, t2 = decomposeEssentialMatrix(E)
-
-    # ... (additional code to choose the correct R and t, triangulate points, etc.)
-
-    # Display results (as an example)
-    cv2.imshow('Image 1 with Epilines', img1_epilines)
-    cv2.imshow('Image 2 with Epilines', img2_epilines)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
 
