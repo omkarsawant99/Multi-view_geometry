@@ -1,9 +1,10 @@
 import cv2
 import numpy as np
 from detector import process_image_for_aruco
-from pose_estimation import calculate_fundamental_matrix, calculate_essential_matrix, estimateCameraPose
+from pose_estimation import calculate_fundamental_matrix, calculate_essential_matrix, estimate_camera_pose
 from epipolar import draw_epipolar_lines
-from calibration import getCalibrationMatrix
+from calibration import get_calibration_matrix
+from visualizer import visualize_camera_poses
 import os
 import glob
 
@@ -21,7 +22,7 @@ images = glob.glob('calib_images/*.jpg')
 if __name__ == "__main__":
     markerSize = 6
     totalMarkers = 250
-    K = getCalibrationMatrix(images)
+    K = get_calibration_matrix(images)
     
     # Ensure that 'left.jpg' and 'right.jpg' are the paths to your images
     pts1, ids1 = process_image_for_aruco(left, markerSize, totalMarkers)
@@ -30,13 +31,15 @@ if __name__ == "__main__":
     if pts1 is not None and pts2 is not None and K is not None:
         F = calculate_fundamental_matrix(pts1, pts2)
         E = calculate_essential_matrix(F, K)
-        R, t = estimateCameraPose(E, K, pts1, pts2)
+        R, t = estimate_camera_pose(E, K, pts1, pts2)
         print("Estimated Camera Pose:")
         print("Rotation Matrix:\n", R)
         print("Translation Vector:\n", t)
 
-        left_img = cv2.imread('left.jpg')
-        right_img = cv2.imread('right.jpg')
+        R0 = np.eye(3)
+        t0 = np.zeros(3)
+        visualize_camera_poses(R0, t0, R, t)
+
         img1_with_lines = draw_epipolar_lines(left, right, F, pts1, pts2)
         # You may want to save or display the image using cv2.imshow and cv2.imwrite
 

@@ -7,9 +7,9 @@ markerSize = 6
 totalMarkers=250
 
 
-def detectArucoTag(img, markerSize, totalMarkers, dictionary_type=aruco.DICT_6X6_250):
+def detect_aruco_tag(img, markerSize, totalMarkers, dictionary_type=aruco.DICT_6X6_250):
     arucoDict = aruco.getPredefinedDictionary(dictionary_type)
-    arucoParams = aruco.DetectorParameters_create()
+    arucoParams = aruco.DetectorParameters()
     (corners, ids, rejected) = aruco.detectMarkers(img, arucoDict, parameters=arucoParams)
     return corners, ids
 
@@ -24,7 +24,7 @@ def prepare_corner_points(corners, ids):
 
 
 def process_image_for_aruco(img, markerSize, totalMarkers):
-    corners, ids = detectArucoTag(img, markerSize, totalMarkers)
+    corners, ids = detect_aruco_tag(img, markerSize, totalMarkers)
     if ids is not None:
         pts, ids = prepare_corner_points(corners, ids)
         return pts, ids

@@ -6,7 +6,7 @@ chess_size = (6, 8)
 frame_size = (1080, 1920)
 
 
-def getCalibrationMatrix(images, show_images=0):
+def get_calibration_matrix(images, show_images=0):
     world_points = []
     img_points = []
     criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)

@@ -13,7 +13,7 @@ def calculate_essential_matrix(F, K):
     return E
 
 
-def estimateCameraPose(E, K, pts1, pts2):
+def estimate_camera_pose(E, K, pts1, pts2):
     # This is a simplification and uses OpenCV's recoverPose function
     # Normally you would decompose E to get possible solutions and test them
     _, R, t, mask = cv2.recoverPose(E, pts1, pts2, K)
