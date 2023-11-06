@@ -4,15 +4,15 @@ This repository contains a collection of Python modules that work together to pe
 ## Purpose
 The code aims to estimate the relative pose (position and orientation) of a camera based on images of a known pattern (e.g., a chessboard for calibration) and ArUco markers for pose estimation. The following steps are performed:
 
-**Camera Calibration**: Determine the camera's intrinsic parameters to correct lens distortion.
+* **Camera Calibration**: Determine the camera's intrinsic parameters to correct lens distortion.
 
-**Fundamental Matrix Calculation**: Compute the fundamental matrix using corresponding points from stereo images.
+* **Fundamental Matrix Calculation**: Compute the fundamental matrix using corresponding points from stereo images.
 
-**Essential Matrix Calculation**: Derive the essential matrix from the fundamental matrix using the camera's intrinsic parameters.
+* **Essential Matrix Calculation**: Derive the essential matrix from the fundamental matrix using the camera's intrinsic parameters.
 
-**Camera Pose Estimation**: Estimate the rotation and translation of the camera with respect to a world coordinate system.
+* **Camera Pose Estimation**: Estimate the rotation and translation of the camera with respect to a world coordinate system.
 
-**Chirality Check**: Determine the correct camera pose among possible solutions by ensuring that points are in front of the camera.
+* **Chirality Check**: Determine the correct camera pose among possible solutions by ensuring that points are in front of the camera.
 
 ## Dependencies
 To run this code, you will need the following libraries:
