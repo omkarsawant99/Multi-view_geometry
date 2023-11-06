@@ -30,4 +30,6 @@ Run the main.py script to start the pose estimation process.
 
 ## Visualization
 Matplotlib is used for visualization, so ensure you have a display environment configured if running this code in a headless setup.
+The visualization should look like this -
+
 <img width="434" alt="image" src="https://github.com/omkarsawant99/Multi-view_geometry/assets/112906388/1a4baab0-6002-4949-a48b-d7af4c7e77c5">
