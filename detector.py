@@ -15,7 +15,6 @@ def detect_aruco_tag(img, markerSize, totalMarkers, dictionary_type=aruco.DICT_6
 
 
 def prepare_corner_points(corners, ids):
-    # Assuming you want the centers of the detected markers
     centers = []
     for corner in corners:
         center = corner[0].mean(axis=0)
