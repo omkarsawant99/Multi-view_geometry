@@ -1,8 +1,9 @@
 # Camera Pose Estimation
-This repository contains a collection of Python modules that work together to perform camera pose estimation using 2D images. The process involves detecting ArUco markers in stereo images, calculating the fundamental and essential matrices, and estimating the camera poses based on these calculations. This can be used in various applications such as augmented reality, 3D reconstruction, and robotics.
+This repository contains a collection of Python modules that work together to perform camera pose estimation using 2D images. The process involves detecting corners of ArUco markers in stereo images, calculating the fundamental and essential matrices, and estimating the camera poses based on these calculations.
+The ArUco markers are used only for accurate feature detection and matching, without outliers. 
 
 ## Purpose
-The code aims to estimate the relative pose (position and orientation) of a camera based on images of a known pattern (e.g., a chessboard for calibration) and ArUco markers for pose estimation. The following steps are performed:
+The code aims to estimate the relative pose (position and orientation) of a camera based on images. The following steps are performed:
 
 * **Camera Calibration**: Determine the camera's intrinsic parameters to correct lens distortion.
 
