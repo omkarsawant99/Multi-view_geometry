@@ -20,6 +20,7 @@ numpy
 opencv-python
 matplotlib
 You can install these packages using pip:
+
 `pip install numpy opencv-python matplotlib`
 
 ## How to Run the Code
