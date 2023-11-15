@@ -93,7 +93,7 @@ def chirality_check(Rs, ts, K, pts1, pts2):
             K = intrinsic camera matrix
             pts1, pts2 = matching points in each image
     
-    OUPUT
+    OUTPUT: R, t, pts_3d = correct pose after chirality check and co-ordinates of 3d points in reference frame
     """
     # Identity matrix for the first camera pose
     T1 = np.hstack((np.eye(3), np.zeros((3, 1))))
@@ -119,8 +119,14 @@ def chirality_check(Rs, ts, K, pts1, pts2):
 
         # Count how many points are in front of both cameras
         positive_depth_count = 0
+
+        # Array to store 3d points
+        pts_3d = np.zeros((num_points, 3))
         for i in range(num_points):
             X = triangulate_point(norm_pts1[i], norm_pts2[i], T1, T2)
+
+            # Record the triangulated point
+            pts_3d[i, :] = X
 
             # Check if the point is in front of both cameras
             if (R[2, :] @ (X[:3] - t.squeeze())) > 0 and X[2] > 0:
@@ -129,7 +135,7 @@ def chirality_check(Rs, ts, K, pts1, pts2):
         # Update the best configuration if needed
         if positive_depth_count > max_positive_depth:
             max_positive_depth = positive_depth_count
-            correct_configuration = (R, t)
+            correct_configuration = (R, t, pts_3d)
 
     return correct_configuration
 

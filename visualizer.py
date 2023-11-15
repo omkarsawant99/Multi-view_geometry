@@ -45,13 +45,17 @@ def create_camera_pyramid(R, t, ax, camera_id, scale=0.5):
     ax.set_zlim(-2, 2)
 
 
-def visualize_camera_poses(R1, t1, R2, t2):
+def visualize_camera_poses(R1, t1, R2, t2, points_3d=None):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    # Assuming you have R1, t1 for the first camera and R2, t2 for the second camera
+    # R1, t1 for the first camera and R2, t2 for the second camera
     create_camera_pyramid(R1, t1, ax, camera_id='1')
 
     create_camera_pyramid(R2, t2, ax, camera_id='2')
+
+    # Plot 3D features
+    if points_3d is not None:
+        ax.scatter(points_3d[:, 0], points_3d[:, 1], points_3d[:, 2], c='r', marker='o')
 
     plt.show()
